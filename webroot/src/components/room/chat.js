@@ -1,35 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import style from "./chat.css";
 
 export default props => {
   const [message, setMessage] = useState("");
   const { handleSubmit, messages } = props;
 
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(scrollToBottom, [messages]);
+
   return (
     <div className={style.wrapper}>
-      <div className={style.messages}>
-        {messages.map((m, i) => (
-          <div className={style.message} key={i}>{m}</div>
-        ))}
+      <div className={style.messagesWrapper}>
+        <div className={style.messages}>
+          {messages.map((m, i) => (
+            <div className={style.message} key={i}>
+              {m}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
-      <form className={style.form}
-        onSubmit={e => {
-          handleSubmit(e, message);
-          setMessage("");
-        }}
-      >
-        <textarea
-          className={style.input}
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          onKeyPress={e => {
-            if (e.key === 'Enter') {
-              handleSubmit(e, message);
-              setMessage("");
-            }
+      <div className={style.formWrapper}>
+        <form
+          className={style.form}
+          onSubmit={e => {
+            handleSubmit(e, message);
+            setMessage("");
           }}
-        />
-      </form>
+        >
+          <textarea
+            className={style.input}
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            onKeyPress={e => {
+              if (e.key === "Enter") {
+                handleSubmit(e, message);
+                setMessage("");
+              }
+            }}
+          />
+        </form>
+      </div>
     </div>
   );
 };
