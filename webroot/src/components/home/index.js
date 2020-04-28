@@ -6,6 +6,7 @@ export default class extends Component {
     return (
       <div>
         <Link to="/room/1">Room 1</Link>
+        <Link to="/room/2">Room 2</Link>
       </div>
     );
   }

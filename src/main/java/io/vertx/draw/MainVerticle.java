@@ -50,14 +50,12 @@ public class MainVerticle extends AbstractVerticle {
     BridgeOptions options = new BridgeOptions()
       .addOutboundPermitted(new PermittedOptions().setAddressRegex("room\\.[0-9]+"));
 
-    Router router = SockJSHandler.create(vertx).bridge(options, event -> {
+    return SockJSHandler.create(vertx).bridge(options, event -> {
       if (event.type() == BridgeEventType.SOCKET_CREATED) {
         System.out.println("socket created");
       }
       event.complete(true);
     });
-
-    return router;
   }
 
   private StaticHandler staticHandler() {
