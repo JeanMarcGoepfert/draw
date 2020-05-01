@@ -73,9 +73,33 @@ public class MainVerticle extends AbstractVerticle {
       }
 
       if (event.type() == BridgeEventType.PUBLISH) {
-        JsonObject body = event.getRawMessage();
-        System.out.println(body);
-        if (body.getString("type") == "NEW_MESSAGE") {
+        JsonObject body = event.getRawMessage().getJsonObject("body");
+
+        if (body.getString("type").equals("NEW_DRAWING")) {
+          String roomId = body.getString("roomId");
+          String userId = body.getString("user");
+          System.out.println("here?");
+          System.out.println(body.getJsonObject("data"));
+          String drawingData = body.getJsonObject("data").getJsonObject("drawing").getString("value");
+          System.out.println(drawingData);
+          client.get(roomId, r -> {
+            Room room = Json.decodeValue(r.result(), Room.class);
+            Drawing drawing = new Drawing(drawingData);
+            room.addDrawing(userId, drawing);
+            client.set(roomId, Json.encodePrettily(room), b -> {});
+          });
+
+        }
+
+        if (body.getString("type").equals("NEW_MESSAGE")) {
+          String roomId = body.getString("roomId");
+          JsonObject messageJson = body.getJsonObject("data");
+          client.get(roomId, r -> {
+            Room room = Json.decodeValue(r.result(), Room.class);
+            Message message = Json.decodeValue(messageJson.toString(), Message.class);
+            room.addMessage(message);
+            client.set(roomId, Json.encodePrettily(room), b -> {});
+          });
 
         }
       }

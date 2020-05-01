@@ -4,6 +4,7 @@ import Chat from "./chat";
 import Header from "./header";
 import NameForm from "./nameForm";
 import CanvasDraw from "react-canvas-draw";
+import { get, omit } from "lodash";
 
 import style from "./index.css";
 
@@ -15,6 +16,7 @@ export default class extends React.Component {
       messages: [],
       message: "",
       drawings: {},
+      initialDrawing: null,
       userName: window.localStorage.getItem("userName"),
       userId: window.localStorage.getItem("userId"),
       registeredRoomId: window.localStorage.getItem("roomId"),
@@ -39,7 +41,6 @@ export default class extends React.Component {
     }
 
     if (message.body.type === "NEW_USER") {
-      console.log(message);
       this.setState({ room: message.body.data });
     }
   }
@@ -65,7 +66,13 @@ export default class extends React.Component {
     fetch(`/api/rooms/${roomId}`).then(res => {
       if (res.status === 200) {
         res.json().then(room => {
-          this.setState({ room });
+          console.log(room.drawings);
+          this.setState({
+            room,
+            messages: room.messages,
+            drawings: omit(room.drawings, this.state.userId),
+            initialDrawing: (room.drawings[this.state.userId] || {}).value
+          });
         });
       }
     });
@@ -97,6 +104,10 @@ export default class extends React.Component {
     this.setState({ userId, userName, registeredRoomId: roomId });
   }
 
+  get getRoomId() {
+    return this.props.match.params.id;
+  }
+
   render() {
     if (this.state.registeredRoomId !== this.props.match.params.id) {
       return (
@@ -107,9 +118,13 @@ export default class extends React.Component {
       );
     }
 
+    console.log(this.state.drawings);
     return (
       <div className={style.pageWrapper}>
-        <Header text={`Room ${this.props.match.params.id}`} users={this.state.room && this.state.room.users} />
+        <Header
+          text={`Room ${this.props.match.params.id}`}
+          users={this.state.room && this.state.room.users}
+        />
         <div className={style.row}>
           <div className={style.chatWrapper}>
             <Chat
@@ -119,34 +134,38 @@ export default class extends React.Component {
             />
           </div>
           <div className={style.contentWrapper}>
-            {Object.keys(this.state.drawings).map(user => {
-              return (
-                <div className={style.otherCanvas} key={user}>
-                  <CanvasDraw
-                    saveData={this.state.drawings[user]}
-                    canvasWidth={2000}
-                    canvasHeight={2000}
-                    brushRadius={5}
-                    hideGrid={true}
-                    immediateLoading={true}
-                  />
-                </div>
-              );
-            })}
+            {Object.keys(this.state.drawings)
+              .filter(v => v === this.state.userId)
+              .map(user => {
+                return (
+                  <div className={style.otherCanvas} key={user}>
+                    <CanvasDraw
+                      saveData={this.state.drawings[user]}
+                      canvasWidth={2000}
+                      canvasHeight={2000}
+                      brushRadius={5}
+                      hideGrid={true}
+                      immediateLoading={true}
+                    />
+                  </div>
+                );
+              })}
             <div className={style.myCanvas}>
               <CanvasDraw
+                immediateLoading={true}
                 key={this.state.userId}
                 canvasWidth={2000}
                 canvasHeight={2000}
                 brushRadius={5}
                 onChange={e => {
-                  this.state.eventBus.publish(this.roomName, {
-                    type: "NEW_DRAWING",
-                    user: this.state.userId,
-                    data: {
-                      drawing: e.getSaveData()
-                    }
-                  });
+                    this.state.eventBus.publish(this.roomName, {
+                      type: "NEW_DRAWING",
+                      user: this.state.userId,
+                      roomId: this.getRoomId,
+                      data: {
+                        drawing: { value: e.getSaveData() }
+                      }
+                    });
                 }}
               />
             </div>

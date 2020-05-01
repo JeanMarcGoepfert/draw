@@ -29,20 +29,6 @@ public class RoomHandler {
     });
   }
 
-  public void handleMessage(RoutingContext context) {
-    String roomId = context.request().getParam("id");
-    String message = context.getBodyAsJson().getString("message");
-
-    boolean valid = true;
-
-    if (valid) {
-      context.vertx().eventBus().publish("room." + roomId, context.getBodyAsString());
-      context.response().setStatusCode(200).end("nice");
-    } else {
-      context.response().setStatusCode(422).end();
-    }
-  }
-
   public void initRoom(RoutingContext context) {
     String uuid = UUID.randomUUID().toString();
     Room room = new Room(uuid);
@@ -70,7 +56,6 @@ public class RoomHandler {
         JsonObject eventBody = new JsonObject().put("data", jsonRoom).put("type", "NEW_USER");
         context.vertx().eventBus().publish("room." + roomId, eventBody);
       });
-      System.out.println("room updated");
     });
 
     context.response()
