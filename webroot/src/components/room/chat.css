@@ -5,15 +5,21 @@
   position: relative;
 }
 
-.messages {
-  height: calc(100vh - 130px);
-  overflow: auto;
-}
-
 .messagesWrapper {
   flex-grow: 1;
   min-height: 100px;
   padding: 10px 0 0;
+}
+
+.messages {
+  height: calc(100vh - 130px);
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollWrapper {
+  overflow: auto;
 }
 
 .message {

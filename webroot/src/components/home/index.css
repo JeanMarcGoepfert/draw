@@ -1,0 +1,23 @@
+.wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button {
+  font-size: 24px;
+  padding: 10px;
+  background: rgb(28, 184, 65);
+  border-color: rgb(28, 184, 65);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  width: 270px;
+}
+
+.button:hover {
+  background: rgb(28, 174, 65);
+  border-color: rgb(28, 174, 65);
+}

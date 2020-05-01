@@ -1,9 +1,13 @@
 package io.vertx.draw;
 
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import jdk.internal.org.jline.terminal.spi.JansiSupport;
 
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 public class RoomHandler {
   private final RoomRepository repository;
@@ -15,7 +19,6 @@ public class RoomHandler {
   public void getRoom(RoutingContext context) {
     String roomId = context.request().getParam("id");
     Optional<Room> room = this.repository.getById(roomId);
-
     if (room.isPresent()) {
       context.response()
         .putHeader("content-type", "application/json")
@@ -41,9 +44,6 @@ public class RoomHandler {
 
     if (valid) {
       this.repository.save(roomRequest);
-      System.out.println(String.format("RoomId: %s", roomId));
-      System.out.println("room." + roomId);
-      System.out.println(context.getBodyAsString());
       context.vertx().eventBus().publish("room." + roomId, context.getBodyAsString());
       context.response().setStatusCode(200).end("nice");
     } else {
@@ -52,13 +52,17 @@ public class RoomHandler {
   }
 
   public void initRoom(RoutingContext context) {
-    String roomId = context.request().getParam("id");
+    UUID uuid = UUID.randomUUID();
+    JsonObject response = new JsonObject().put("id", uuid.toString());
 
-    Optional<Room> room = this.repository.getById(roomId);
-    if(!room.isPresent()) {
-      this.repository.save(new Room(roomId));
-    }
-
-    context.next();
+    context.response().setStatusCode(200).end(response.toString());
   }
-}
+  public void newUser(RoutingContext context) {
+    UUID uuid = UUID.randomUUID();
+    JsonObject response = new JsonObject().put("id", uuid.toString());
+
+    context.response()
+      .putHeader("content-type", "application/json")
+      .setStatusCode(200)
+      .end(response.toString());
+  }}

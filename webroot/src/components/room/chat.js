@@ -5,11 +5,11 @@ export default props => {
   const [message, setMessage] = useState("");
   const { handleSubmit, messages } = props;
 
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(scrollToBottom, [messages]);
 
@@ -17,22 +17,18 @@ export default props => {
     <div className={style.wrapper}>
       <div className={style.messagesWrapper}>
         <div className={style.messages}>
-          {messages.map((m, i) => (
-            <div className={style.message} key={i}>
-              {m}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
+          <div className={style.scrollWrapper}>
+            {messages.map((m, i) => (
+              <div className={style.message} key={i}>
+                {m.message} - { m.userName }
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
       </div>
       <div className={style.formWrapper}>
-        <form
-          className={style.form}
-          onSubmit={e => {
-            handleSubmit(e, message);
-            setMessage("");
-          }}
-        >
+        <div className={style.form}>
           <textarea
             className={style.input}
             value={message}
@@ -44,7 +40,7 @@ export default props => {
               }
             }}
           />
-        </form>
+        </div>
       </div>
     </div>
   );
