@@ -12,7 +12,6 @@ export default props => {
   };
 
   useEffect(scrollToBottom, [messages]);
-  console.log(props);
 
   return (
     <div className={style.wrapper}>

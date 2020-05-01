@@ -66,12 +66,11 @@ export default class extends React.Component {
     fetch(`/api/rooms/${roomId}`).then(res => {
       if (res.status === 200) {
         res.json().then(room => {
-          console.log(room.drawings);
           this.setState({
             room,
             messages: room.messages,
             drawings: omit(room.drawings, this.state.userId),
-            initialDrawing: (room.drawings[this.state.userId] || {}).value
+            initialDrawing: room.drawings[this.state.userId] && room.drawings[this.state.userId].value
           });
         });
       }
@@ -118,7 +117,8 @@ export default class extends React.Component {
       );
     }
 
-    console.log(this.state.drawings);
+    console.log('here');
+    console.log(this.initialDrawing);
     return (
       <div className={style.pageWrapper}>
         <Header
@@ -140,7 +140,7 @@ export default class extends React.Component {
                 return (
                   <div className={style.otherCanvas} key={user}>
                     <CanvasDraw
-                      saveData={this.state.drawings[user]}
+                      saveData={this.state.drawings[user].value}
                       canvasWidth={2000}
                       canvasHeight={2000}
                       brushRadius={5}
@@ -152,12 +152,17 @@ export default class extends React.Component {
               })}
             <div className={style.myCanvas}>
               <CanvasDraw
+                saveData={undefined}
                 immediateLoading={true}
                 key={this.state.userId}
                 canvasWidth={2000}
                 canvasHeight={2000}
                 brushRadius={5}
                 onChange={e => {
+                  if (this.state.eventBus.state === 0) {
+                    return;
+                  }
+                  return;
                     this.state.eventBus.publish(this.roomName, {
                       type: "NEW_DRAWING",
                       user: this.state.userId,
