@@ -27,16 +27,15 @@ public class MainVerticle extends AbstractVerticle {
     Router eventBusRouter = eventBusHandler();
     router.route().handler(BodyHandler.create());
     router.mountSubRouter("/eventbus", eventBusRouter);
-    router.mountSubRouter("/api", apiRouter());
+    router.mountSubRouter("/api", apiRouter(client));
     router.route().failureHandler(errorHandler());
     router.route().handler(staticHandler());
 
     vertx.createHttpServer().requestHandler(router).listen(8080);
   }
 
-  private Router apiRouter() {
-    RoomRepository repository = new RoomRepository(vertx.sharedData());
-    RoomHandler roomHandler = new RoomHandler(repository);
+  private Router apiRouter(RedisClient client) {
+    RoomHandler roomHandler = new RoomHandler(client);
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
@@ -64,7 +63,6 @@ public class MainVerticle extends AbstractVerticle {
       .addInboundPermitted(new PermittedOptions().setAddressRegex(splitter.toString()));
 
     return SockJSHandler.create(vertx).bridge(options, event -> {
-      System.out.println(event.getRawMessage());
       if (event.type() == BridgeEventType.SOCKET_CREATED) {
         System.out.println("socket created");
       }
@@ -74,6 +72,13 @@ public class MainVerticle extends AbstractVerticle {
         event.complete(true);
       }
 
+      if (event.type() == BridgeEventType.PUBLISH) {
+        JsonObject body = event.getRawMessage();
+        System.out.println(body);
+        if (body.getString("type") == "NEW_MESSAGE") {
+
+        }
+      }
 
       event.complete(true);
     });

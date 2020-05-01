@@ -1,8 +1,10 @@
 package io.vertx.draw;
 
 public class User {
-  private final String id;
-  private final String name;
+  private String id;
+  private String name;
+
+  public User() {}
 
   public User(String id, String name) {
     this.id = id;
@@ -16,6 +18,14 @@ public class User {
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   @Override

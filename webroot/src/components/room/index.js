@@ -1,7 +1,7 @@
 import React from "react";
 import EventBus from "vertx3-eventbus-client";
 import Chat from "./chat";
-import Header from "../header";
+import Header from "./header";
 import NameForm from "./nameForm";
 import CanvasDraw from "react-canvas-draw";
 
@@ -37,10 +37,19 @@ export default class extends React.Component {
         this.setState({ drawings: this.state.drawings });
       }
     }
+
+    if (message.body.type === "NEW_USER") {
+      console.log(message);
+      this.setState({ room: message.body.data });
+    }
   }
 
   get roomName() {
     return `room.${this.props.match.params.id}`;
+  }
+
+  get roomId() {
+    return this.props.match.params.id;
   }
 
   componentDidMount() {
@@ -50,6 +59,16 @@ export default class extends React.Component {
         this.messageHandler.bind(this)
       );
     };
+
+    const roomId = this.props.match.params.id;
+
+    fetch(`/api/rooms/${roomId}`).then(res => {
+      if (res.status === 200) {
+        res.json().then(room => {
+          this.setState({ room });
+        });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -61,6 +80,7 @@ export default class extends React.Component {
     this.state.eventBus.publish(this.roomName, {
       type: "NEW_MESSAGE",
       userId: window.localStorage.getItem("userId"),
+      roomId: this.roomId,
       data: {
         userId: window.localStorage.getItem("userId"),
         userName: window.localStorage.getItem("userName"),
@@ -78,7 +98,6 @@ export default class extends React.Component {
   }
 
   render() {
-    console.log(this.state.drawings);
     if (this.state.registeredRoomId !== this.props.match.params.id) {
       return (
         <NameForm
@@ -90,10 +109,11 @@ export default class extends React.Component {
 
     return (
       <div className={style.pageWrapper}>
-        <Header text={`Room ${this.props.match.params.id}`} />
+        <Header text={`Room ${this.props.match.params.id}`} users={this.state.room && this.state.room.users} />
         <div className={style.row}>
           <div className={style.chatWrapper}>
             <Chat
+              me={this.state.userId}
               handleSubmit={this.handleSubmit.bind(this)}
               messages={this.state.messages}
             />

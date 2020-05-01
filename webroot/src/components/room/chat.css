@@ -22,8 +22,33 @@
   overflow: auto;
 }
 
-.message {
+.myMessage {
   padding: 10px 15px;
+  padding-left: 10%;
+}
+
+.otherMessage {
+  padding: 10px 15px;
+  padding-right: 10%;
+}
+
+.text {
+  border-radius: 5px;
+  background: #eee;
+  padding: 10px;
+}
+
+.otherMessage .name {
+  font-size: 12px;
+  color: #999;
+  margin-left: 2px;
+}
+
+.myMessage .name {
+  text-align: right;
+  font-size: 12px;
+  color: #999;
+  margin-right: 2px;
 }
 
 .message:hover {
