@@ -4,10 +4,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.redis.RedisClient;
-import jdk.internal.org.jline.terminal.spi.JansiSupport;
 
-import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 public class RoomHandler {
@@ -33,7 +30,7 @@ public class RoomHandler {
     String uuid = UUID.randomUUID().toString();
     Room room = new Room(uuid);
 
-    client.set(uuid, Json.encodePrettily(room), r -> {
+    client.set(uuid, Json.encode(room), r -> {
       System.out.println("room created");
     });
 
@@ -51,7 +48,7 @@ public class RoomHandler {
     client.get(roomId, r -> {
       Room room = Json.decodeValue(r.result(), Room.class);
       room.addUser(user);
-      client.set(roomId, Json.encodePrettily(room), a -> {
+      client.set(roomId, Json.encode(room), a -> {
         JsonObject jsonRoom = JsonObject.mapFrom(room);
         JsonObject eventBody = new JsonObject().put("data", jsonRoom).put("type", "NEW_USER");
         context.vertx().eventBus().publish("room." + roomId, eventBody);

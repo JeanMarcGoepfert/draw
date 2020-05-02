@@ -23,7 +23,7 @@ export default props => {
                 return (
                   <div className={style.myMessage} key={i}>
                     <div className={style.text}>{m.message}</div>
-                    <div className={style.name}>me</div>
+                    <div className={style.name}>{m.userName}</div>
                   </div>
                 );
               } else {

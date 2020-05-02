@@ -1,3 +1,6 @@
+docker-compose up
+redis-commander --redis-host 192.168.42.45
+
 = Vert.x Maven Starter
 
 This project is a template to start your own Vert.x project using Apache Maven.

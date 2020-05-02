@@ -70,7 +70,9 @@ export default class extends React.Component {
             room,
             messages: room.messages,
             drawings: omit(room.drawings, this.state.userId),
-            initialDrawing: room.drawings[this.state.userId] && room.drawings[this.state.userId].value
+            initialDrawing:
+              room.drawings[this.state.userId] &&
+              room.drawings[this.state.userId].value
           });
         });
       }
@@ -117,8 +119,6 @@ export default class extends React.Component {
       );
     }
 
-    console.log('here');
-    console.log(this.initialDrawing);
     return (
       <div className={style.pageWrapper}>
         <Header
@@ -135,7 +135,7 @@ export default class extends React.Component {
           </div>
           <div className={style.contentWrapper}>
             {Object.keys(this.state.drawings)
-              .filter(v => v === this.state.userId)
+              .filter(v => v !== this.state.userId)
               .map(user => {
                 return (
                   <div className={style.otherCanvas} key={user}>
@@ -152,25 +152,22 @@ export default class extends React.Component {
               })}
             <div className={style.myCanvas}>
               <CanvasDraw
-                saveData={undefined}
+                saveData={this.state.initialDrawing || undefined}
                 immediateLoading={true}
                 key={this.state.userId}
                 canvasWidth={2000}
                 canvasHeight={2000}
                 brushRadius={5}
                 onChange={e => {
-                  if (this.state.eventBus.state === 0) {
-                    return;
-                  }
-                  return;
-                    this.state.eventBus.publish(this.roomName, {
-                      type: "NEW_DRAWING",
-                      user: this.state.userId,
-                      roomId: this.getRoomId,
-                      data: {
-                        drawing: { value: e.getSaveData() }
-                      }
-                    });
+                  if (this.state.eventBus.state === 0) { return; }
+                  this.state.eventBus.publish(this.roomName, {
+                    type: "NEW_DRAWING",
+                    user: this.state.userId,
+                    roomId: this.getRoomId,
+                    data: {
+                      drawing: { value: e.getSaveData() }
+                    }
+                  });
                 }}
               />
             </div>
