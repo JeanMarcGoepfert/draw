@@ -3,9 +3,8 @@ import EventBus from "vertx3-eventbus-client";
 import Chat from "./chat";
 import Header from "./header";
 import NameForm from "./nameForm";
-import CanvasDraw from "react-canvas-draw";
-import { get, omit } from "lodash";
-
+import Canvas from "./canvas";
+import { omit } from "lodash";
 import style from "./index.css";
 
 export default class extends React.Component {
@@ -20,9 +19,7 @@ export default class extends React.Component {
       userName: window.localStorage.getItem("userName"),
       userId: window.localStorage.getItem("userId"),
       registeredRoomId: window.localStorage.getItem("roomId"),
-      eventBus: new EventBus("http://localhost:8080/eventbus", {
-        sessionId: 10
-      })
+      eventBus: new EventBus("/eventbus")
     };
   }
 
@@ -80,49 +77,41 @@ export default class extends React.Component {
   }
 
   componentWillUnmount() {
-    delete this.state.eventBus.handlers["room." + this.props.match.params.id];
+    delete this.state.eventBus.handlers[this.roomName];
   }
 
   handleSubmit(e, message) {
     e.preventDefault();
     this.state.eventBus.publish(this.roomName, {
       type: "NEW_MESSAGE",
-      userId: window.localStorage.getItem("userId"),
+      userId: this.state.userId,
       roomId: this.roomId,
       data: {
-        userId: window.localStorage.getItem("userId"),
-        userName: window.localStorage.getItem("userName"),
+        userId: this.state.userId,
+        userName: this.state.userName,
         message
       }
     });
   }
 
   setUser(userId, userName) {
-    const roomId = this.props.match.params.id;
-    window.localStorage.setItem("roomId", roomId);
+    window.localStorage.setItem("roomId", this.roomId);
     window.localStorage.setItem("userName", userName);
     window.localStorage.setItem("userId", userId);
-    this.setState({ userId, userName, registeredRoomId: roomId });
-  }
-
-  get getRoomId() {
-    return this.props.match.params.id;
+    this.setState({ userId, userName, registeredRoomId: this.roomId });
   }
 
   render() {
-    if (this.state.registeredRoomId !== this.props.match.params.id) {
+    if (this.state.registeredRoomId !== this.roomId) {
       return (
-        <NameForm
-          roomId={this.props.match.params.id}
-          setUser={this.setUser.bind(this)}
-        />
+        <NameForm roomId={this.roomId} setUser={this.setUser.bind(this)} />
       );
     }
 
     return (
       <div className={style.pageWrapper}>
         <Header
-          text={`Room ${this.props.match.params.id}`}
+          text={`Room ${this.roomId}`}
           users={this.state.room && this.state.room.users}
         />
         <div className={style.row}>
@@ -134,43 +123,14 @@ export default class extends React.Component {
             />
           </div>
           <div className={style.contentWrapper}>
-            {Object.keys(this.state.drawings)
-              .filter(v => v !== this.state.userId)
-              .map(user => {
-                return (
-                  <div className={style.otherCanvas} key={user}>
-                    <CanvasDraw
-                      saveData={this.state.drawings[user].value}
-                      canvasWidth={2000}
-                      canvasHeight={2000}
-                      brushRadius={5}
-                      hideGrid={true}
-                      immediateLoading={true}
-                    />
-                  </div>
-                );
-              })}
-            <div className={style.myCanvas}>
-              <CanvasDraw
-                saveData={this.state.initialDrawing || undefined}
-                immediateLoading={true}
-                key={this.state.userId}
-                canvasWidth={2000}
-                canvasHeight={2000}
-                brushRadius={5}
-                onChange={e => {
-                  if (this.state.eventBus.state === 0) { return; }
-                  this.state.eventBus.publish(this.roomName, {
-                    type: "NEW_DRAWING",
-                    user: this.state.userId,
-                    roomId: this.getRoomId,
-                    data: {
-                      drawing: { value: e.getSaveData() }
-                    }
-                  });
-                }}
-              />
-            </div>
+            <Canvas
+              drawings={this.state.drawings}
+              userId={this.state.userId}
+              initialDrawing={this.state.initialDrawing}
+              eventBus={this.state.eventBus}
+              roomName={this.roomName}
+              roomId={this.roomId}
+            />
           </div>
         </div>
       </div>

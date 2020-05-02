@@ -33,9 +33,3 @@
   left: 15px;
   top: 15px;
 }
-
-.myCanvas, .otherCanvas {
-  position: absolute;
-  left: 0;
-  top: 0
-}

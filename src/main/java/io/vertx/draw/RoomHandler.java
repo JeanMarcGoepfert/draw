@@ -26,13 +26,11 @@ public class RoomHandler {
     });
   }
 
-  public void initRoom(RoutingContext context) {
+  public void createRoom(RoutingContext context) {
     String uuid = UUID.randomUUID().toString();
     Room room = new Room(uuid);
 
-    client.set(uuid, Json.encode(room), r -> {
-      System.out.println("room created");
-    });
+    client.set(uuid, Json.encode(room), r -> {});
 
     JsonObject response = new JsonObject().put("id", uuid);
 
@@ -59,4 +57,5 @@ public class RoomHandler {
       .putHeader("content-type", "application/json")
       .setStatusCode(200)
       .end(response.toString());
-  }}
+  }
+}

@@ -7,5 +7,5 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-webroot/node_modules/
+client/node_modules/
 .DS_Store

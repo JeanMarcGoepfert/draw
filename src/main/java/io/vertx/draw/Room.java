@@ -1,6 +1,5 @@
 package io.vertx.draw;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,11 +9,11 @@ public class Room {
   private ArrayList<Message> messages = new ArrayList<>();
   private HashMap<String, Drawing> drawings = new HashMap<>();
 
+  public Room() {}
+
   public Room(String id) {
     this.id = id;
   }
-
-  public Room() {}
 
   public Room(String id, HashMap<String, User> users, ArrayList<Message> messages, HashMap<String, Drawing> drawings) {
     this.id = id;
