@@ -1,3 +1,12 @@
+TODO:
+- compress strings
+- handle user leave (show connection status?)
+- drawing controls
+- start each user with diff colour?
+- created/updated
+- deploy
+- set up domain
+
 ### Requirements
 
 * Apache Maven
