@@ -51,11 +51,9 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    this.state.eventBus.onopen = () => {
-      this.state.eventBus.registerHandler(
-        this.roomName,
-        this.messageHandler.bind(this)
-      );
+    const { eventBus } = this.state;
+    eventBus.onopen = () => {
+      eventBus.registerHandler(this.roomName, this.messageHandler.bind(this));
     };
 
     const roomId = this.props.match.params.id;
@@ -102,6 +100,7 @@ export default class extends React.Component {
   }
 
   render() {
+    console.log('hello???')
     if (this.state.registeredRoomId !== this.roomId) {
       return (
         <NameForm roomId={this.roomId} setUser={this.setUser.bind(this)} />

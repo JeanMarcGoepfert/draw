@@ -30,6 +30,6 @@ public class MainVerticle extends AbstractVerticle {
   }
 
   private StaticHandler staticHandler() {
-    return StaticHandler.create().setWebRoot("client").setCachingEnabled(false);
+    return StaticHandler.create().setWebRoot("client/dist").setCachingEnabled(false);
   }
 }

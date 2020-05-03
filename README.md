@@ -1,9 +1,8 @@
 TODO:
-- compress strings
-- handle user leave (show connection status?)
 - drawing controls
+- handle room not found etc, 404s
 - start each user with diff colour?
-- created/updated
+- created/updated timestamps
 - deploy
 - set up domain
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
 import style from "./canvas.css";
 
@@ -10,7 +10,11 @@ export default ({
   roomName,
   roomId
 }) => {
-  const handleDraw = (e) => {
+  const canvasRef = useRef(null);
+  const [brushColor, setBrushColor] = useState("#ffc600");
+  const [brushSize, setBrushSize] = useState(5);
+  const [lazyRadius, setLazyRadius] = useState(5);
+  const handleDraw = e => {
     if (eventBus.state === 0) {
       return;
     }
@@ -43,12 +47,15 @@ export default ({
         })}
       <div className={style.canvas}>
         <CanvasDraw
+          brushColor={brushColor}
+          brushRadius={brushSize}
+          lazyRadius={lazyRadius}
+          ref={canvasRef}
           saveData={initialDrawing || undefined}
           immediateLoading={true}
           key={userId}
           canvasWidth={2000}
           canvasHeight={2000}
-          brushRadius={5}
           onChange={handleDraw}
         />
       </div>
