@@ -29,7 +29,8 @@ public class RoomHandler {
   public void createRoom(RoutingContext context) {
     String uuid = UUID.randomUUID().toString();
     Room room = new Room(uuid);
-
+    System.out.println("here1?");
+    System.out.println(client);
     client.set(uuid, Json.encode(room), r -> {
       System.out.println("here?");
       System.out.println(r);
