@@ -22,7 +22,7 @@ public class MainVerticle extends AbstractVerticle {
     router.mountSubRouter("/api", new ApiRouter(client, vertx).init());
     router.route().failureHandler(errorHandler());
     router.route().handler(staticHandler());
-    vertx.createHttpServer().requestHandler(router).listen(80);
+    vertx.createHttpServer().requestHandler(router).listen(8080);
   }
 
   private ErrorHandler errorHandler() {
