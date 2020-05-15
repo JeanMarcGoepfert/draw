@@ -30,7 +30,10 @@ public class RoomHandler {
     String uuid = UUID.randomUUID().toString();
     Room room = new Room(uuid);
 
-    client.set(uuid, Json.encode(room), r -> {});
+    client.set(uuid, Json.encode(room), r -> {
+      System.out.println("here?");
+      System.out.println(r);
+    });
 
     JsonObject response = new JsonObject().put("id", uuid);
 

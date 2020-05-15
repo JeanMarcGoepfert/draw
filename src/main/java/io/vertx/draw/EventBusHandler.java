@@ -25,7 +25,8 @@ public class EventBusHandler {
       Room room = Json.decodeValue(r.result(), Room.class);
       Drawing drawing = new Drawing(drawingData);
       room.addDrawing(userId, drawing);
-      client.set(roomId, Json.encode(room), b -> {});
+      client.set(roomId, Json.encode(room), b -> {
+      });
     });
   }
 
