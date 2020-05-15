@@ -29,7 +29,7 @@ export default ({
 
   const clear = () => {
     canvasRef.current.clear();
-    handleDraw({ getSaveData: () => "" });
+    handleDraw({ getSaveData: () => "{}" });
   };
 
   return (
