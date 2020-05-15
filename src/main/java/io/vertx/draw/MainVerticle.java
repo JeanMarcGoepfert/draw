@@ -14,7 +14,7 @@ public class MainVerticle extends AbstractVerticle {
 
   @Override
   public void start() {
-    port  = getPort();
+    port = getPort();
     client = getRedisClient();
 
     System.out.println("Starting app");
@@ -41,7 +41,7 @@ public class MainVerticle extends AbstractVerticle {
     System.out.println(redisUrlEnv);
     if (redisUrlEnv != null) {
       return RedisClient.create(vertx,
-        new RedisOptions().setAddress(redisUrlEnv));
+        new RedisOptions().setHost("p80c19d5dd79d52770a2d2f4859db02f30712d5cc5c2aca2d9ae07d192b2c3365@ec2-50-17-235-242.compute-1.amazonaws.com"));
     } else {
       return RedisClient.create(vertx,
         new RedisOptions().setHost("192.168.42.45"));
