@@ -29,7 +29,11 @@ export default ({
 
   const clear = () => {
     canvasRef.current.clear();
-    handleDraw({ getSaveData: () => "{}" });
+    handleDraw({
+      getSaveData: () => {
+        return '{"lines":[],"width":2000,"height":2000}';
+      }
+    });
   };
 
   return (
@@ -44,11 +48,12 @@ export default ({
 
       {Object.keys(drawings)
         .filter(v => v !== userId)
-        .map(user => {
+          .map(user => {
+          const drawing = drawings[user].value;
           return (
             <div className={style.canvas} key={user}>
               <CanvasDraw
-                saveData={drawings[user].value}
+                saveData={drawing}
                 canvasWidth={2000}
                 canvasHeight={2000}
                 brushRadius={5}
