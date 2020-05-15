@@ -15,6 +15,11 @@ public class MainVerticle extends AbstractVerticle {
   public void start() {
     client = RedisClient.create(vertx,
       new RedisOptions().setHost("192.1sdasd68.42.45"));
+    String portEnv = System.getenv("PORT");
+    String port = portEnv !=  null ? portEnv : "8080";
+
+    System.out.println(port);
+    System.out.println("starting");
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
@@ -22,7 +27,7 @@ public class MainVerticle extends AbstractVerticle {
     router.mountSubRouter("/api", new ApiRouter(client, vertx).init());
     router.route().failureHandler(errorHandler());
     router.route().handler(staticHandler());
-    vertx.createHttpServer().requestHandler(router).listen(8080);
+    vertx.createHttpServer().requestHandler(router).listen(Integer.parseInt(port));
   }
 
   private ErrorHandler errorHandler() {
