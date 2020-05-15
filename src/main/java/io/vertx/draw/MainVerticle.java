@@ -10,16 +10,14 @@ import io.vertx.redis.RedisOptions;
 
 public class MainVerticle extends AbstractVerticle {
   private RedisClient client;
+  private String port;
 
   @Override
   public void start() {
-    client = RedisClient.create(vertx,
-      new RedisOptions().setHost("192.1sdasd68.42.45"));
-    String portEnv = System.getenv("PORT");
-    String port = portEnv !=  null ? portEnv : "8080";
+    port  = getPort();
+    client = getRedisClient();
 
-    System.out.println(port);
-    System.out.println("starting");
+    System.out.println("Starting app");
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
@@ -36,5 +34,21 @@ public class MainVerticle extends AbstractVerticle {
 
   private StaticHandler staticHandler() {
     return StaticHandler.create().setWebRoot("client/dist").setCachingEnabled(false);
+  }
+
+  private RedisClient getRedisClient() {
+    String redisUrlEnv = System.getenv("REDIS_URL");
+    if (redisUrlEnv != null) {
+      return RedisClient.create(vertx,
+        new RedisOptions().setHost(redisUrlEnv));
+    } else {
+      return RedisClient.create(vertx,
+        new RedisOptions().setHost("192.168.42.45"));
+    }
+  }
+
+  private String getPort() {
+    String portEnv = System.getenv("PORT");
+    return portEnv !=  null ? portEnv : "8080";
   }
 }
