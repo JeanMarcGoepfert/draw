@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
+import Controls from "./canvasControls";
 import style from "./canvas.css";
 
 export default ({
@@ -11,9 +12,8 @@ export default ({
   roomId
 }) => {
   const canvasRef = useRef(null);
-  const [brushColor, setBrushColor] = useState("#ffc600");
-  const [brushSize, setBrushSize] = useState(5);
-  const [lazyRadius, setLazyRadius] = useState(5);
+  const [brushColor, setBrushColor] = useState("#111111");
+  const [brushSize, setBrushSize] = useState(2);
   const handleDraw = e => {
     if (eventBus.state === 0) {
       return;
@@ -27,8 +27,21 @@ export default ({
     });
   };
 
+  const clear = () => {
+    canvasRef.current.clear();
+    handleDraw({ getSaveData: () => "" });
+  };
+
   return (
     <div className={style.contentWrapper}>
+      <Controls
+        clear={clear}
+        brushColor={brushColor}
+        setBrushColor={setBrushColor}
+        brushSize={brushSize}
+        setBrushSize={setBrushSize}
+      />
+
       {Object.keys(drawings)
         .filter(v => v !== userId)
         .map(user => {
@@ -49,7 +62,7 @@ export default ({
         <CanvasDraw
           brushColor={brushColor}
           brushRadius={brushSize}
-          lazyRadius={lazyRadius}
+          lazyRadius={5}
           ref={canvasRef}
           saveData={initialDrawing || undefined}
           immediateLoading={true}

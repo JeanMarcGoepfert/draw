@@ -1,0 +1,52 @@
+.controls {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 20;
+  display: flex;
+}
+
+.colors,
+.size {
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+}
+
+.color {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.color:hover,
+.active {
+  transform: scale(1.2);
+}
+
+.label {
+  display: flex;
+  margin-right: 5px;
+  position: relative;
+  position: relative;
+  align-items: center;
+}
+
+.brushSize {
+  border-radius: 50%;
+  display: inline-block;
+  background-color: #000;
+  height: 3px;
+  width: 3px;
+  margin: 0 10px;
+}
+
+.button {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 5px;
+}

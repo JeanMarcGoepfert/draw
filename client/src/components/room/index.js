@@ -100,7 +100,6 @@ export default class extends React.Component {
   }
 
   render() {
-    console.log('hello???')
     if (this.state.registeredRoomId !== this.roomId) {
       return (
         <NameForm roomId={this.roomId} setUser={this.setUser.bind(this)} />
