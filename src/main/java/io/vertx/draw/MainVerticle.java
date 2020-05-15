@@ -14,7 +14,7 @@ public class MainVerticle extends AbstractVerticle {
   @Override
   public void start() {
     client = RedisClient.create(vertx,
-      new RedisOptions().setHost("192.168.42.45"));
+      new RedisOptions().setAddress(System.getenv("REDIS_URL")));
 
     Router router = Router.router(vertx);
     router.route().handler(BodyHandler.create());
