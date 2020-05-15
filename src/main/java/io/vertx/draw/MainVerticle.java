@@ -38,9 +38,10 @@ public class MainVerticle extends AbstractVerticle {
 
   private RedisClient getRedisClient() {
     String redisUrlEnv = System.getenv("REDIS_URL");
+
     if (redisUrlEnv != null) {
       return RedisClient.create(vertx,
-        new RedisOptions().setHost(redisUrlEnv));
+        new RedisOptions().setAddress(redisUrlEnv));
     } else {
       return RedisClient.create(vertx,
         new RedisOptions().setHost("192.168.42.45"));
