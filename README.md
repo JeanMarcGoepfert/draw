@@ -19,6 +19,11 @@ redis-commander --redis-host 192.168.42.45 //replace this with your docker host 
 ./redeploy.sh
 ```
 
+Deploying:
+```
+git push heroku master
+```
+
 Or
 
 ```
