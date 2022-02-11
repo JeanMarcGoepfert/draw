@@ -10,7 +10,7 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-    <vertx.version>3.9.0</vertx.version>
+    <vertx.version>3.9.4</vertx.version>
     <main.verticle>io.vertx.draw.MainVerticle</main.verticle>
   </properties>
 
